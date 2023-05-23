@@ -2,21 +2,17 @@ module go.infratographer.com/location-api
 
 go 1.20
 
-// replace github.com/99designs/gqlgen => github.com/nicolerenee/gqlgen v0.0.0-20230510181517-0d9b2b908624
-
-replace github.com/99designs/gqlgen => ../gqlgen
-
 require (
 	entgo.io/contrib v0.4.5
 	entgo.io/ent v0.12.3
-	github.com/99designs/gqlgen v0.17.31
+	github.com/99designs/gqlgen v0.17.32-0.20230521032519-c313bf3d2899
 	github.com/Yamashou/gqlgenc v0.13.5
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
-	github.com/vektah/gqlparser/v2 v2.5.1
+	github.com/vektah/gqlparser/v2 v2.5.2-0.20230422221642-25e09f9d292d
 	github.com/wundergraph/graphql-go-tools v1.63.0
 	go.infratographer.com/x v0.1.2
 	go.uber.org/zap v1.24.0

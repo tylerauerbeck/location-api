@@ -1,7 +1,16 @@
-directive @goField(forceResolver: Boolean, name: String) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
-directive @goModel(model: String, models: [String!]) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+directive @composeDirective(name: String!) on SCHEMA
+directive @extends on OBJECT | INTERFACE
+directive @external on OBJECT | FIELD_DEFINITION
+directive @inaccessible on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 directive @interfaceObject on OBJECT
+directive @key(fields: FieldSet!, resolvable: Boolean = true) on OBJECT | INTERFACE
+directive @link(import: [String!], url: String!) on SCHEMA
+directive @override(from: String!) on FIELD_DEFINITION
 directive @prefixedID(prefix: String!) on OBJECT
+directive @provides(fields: FieldSet!) on FIELD_DEFINITION
+directive @requires(fields: FieldSet!) on FIELD_DEFINITION
+directive @shareable on FIELD_DEFINITION | OBJECT
+directive @tag(name: String!) on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
 """Input information to create a location."""
 input CreateLocationInput {
 	"""The name for the location."""
@@ -16,6 +25,7 @@ Define a Relay Cursor type:
 https://relay.dev/graphql/connections.htm#sec-Cursor
 """
 scalar Cursor
+scalar FieldSet
 """A valid JSON string."""
 scalar JSON
 type Location implements Node & MetadataNode @key(fields: "id") @prefixedID(prefix: "lctnloc") {
@@ -195,7 +205,7 @@ type ResourceOwner @key(fields: "id") @interfaceObject {
 
 		"""Filtering options for Locations returned from the connection."""
 		where: LocationWhereInput
-	): LocationConnection! @goField(forceResolver: true)
+	): LocationConnection!
 }
 """The builtin Time type"""
 scalar Time
@@ -207,21 +217,8 @@ input UpdateLocationInput {
 	description: String
 	clearDescription: Boolean
 }
+scalar _Any
 union _Entity = Location | ResourceOwner
 type _Service {
 	sdl: String
 }
-
-scalar _Any
-scalar FieldSet
-directive @requires(fields: FieldSet!) on FIELD_DEFINITION
-directive @provides(fields: FieldSet!) on FIELD_DEFINITION
-directive @extends on OBJECT | INTERFACE
-directive @key(fields: FieldSet!, resolvable: Boolean = true) repeatable on OBJECT | INTERFACE
-directive @link(import: [String!], url: String!) repeatable on SCHEMA
-directive @external on FIELD_DEFINITION | OBJECT
-directive @shareable on OBJECT | FIELD_DEFINITION
-directive @tag(name: String!) repeatable on FIELD_DEFINITION | INTERFACE | OBJECT | UNION | ARGUMENT_DEFINITION | SCALAR | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
-directive @override(from: String!) on FIELD_DEFINITION
-directive @inaccessible on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | INTERFACE | UNION | ENUM | ENUM_VALUE | INPUT_OBJECT | INPUT_FIELD_DEFINITION
-#directive @interfaceObject on OBJECT

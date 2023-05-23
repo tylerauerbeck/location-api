@@ -1,6 +1,3 @@
-directive @goField(forceResolver: Boolean, name: String) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
-directive @goModel(model: String, models: [String!]) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
-directive @interfaceObject on OBJECT
 directive @prefixedID(prefix: String!) on OBJECT
 """Input information to create a location."""
 input CreateLocationInput {
@@ -195,7 +192,7 @@ type ResourceOwner @key(fields: "id") @interfaceObject {
 
 		"""Filtering options for Locations returned from the connection."""
 		where: LocationWhereInput
-	): LocationConnection! @goField(forceResolver: true)
+	): LocationConnection!
 }
 """The builtin Time type"""
 scalar Time
@@ -207,16 +204,23 @@ input UpdateLocationInput {
 	description: String
 	clearDescription: Boolean
 }
+scalar _Any
 union _Entity = Location | ResourceOwner
 type _Service {
 	sdl: String
 }
-scalar _Any
+
 extend schema
   @link(
     url: "https://specs.apollo.dev/federation/v2.3"
     import: [
-      "@key",
-      "@interfaceObject"
+			"@key",
+			"@interfaceObject",
+			"@shareable",
+			"@inaccessible",
+			"@override",
+			"@provides",
+			"@requires",
+			"@tag"
       ]
   )

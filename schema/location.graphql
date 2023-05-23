@@ -1,10 +1,4 @@
 directive @prefixedID(prefix: String!) on OBJECT
-extend schema
-  @link(
-    url: "https://specs.apollo.dev/federation/v2.4"
-    import: ["@key", "@interfaceObject", "@external", "@shareable"]
-  )
-directive @interfaceObject on OBJECT
 
 extend type Query {
   """
