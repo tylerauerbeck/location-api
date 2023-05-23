@@ -1,0 +1,26 @@
+query GetResourceOwnerLocations($id: ID!, $orderBy: LocationOrder) {
+  _entities(representations: { __typename: "ResourceOwner", id: $id }) {
+    ... on ResourceOwner {
+      locations(orderBy: $orderBy) {
+        edges {
+          node {
+            id
+            name
+            description
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetLocationByID($id: ID!) {
+  location(id: $id) {
+    id
+    name
+    description
+    owner {
+      id
+    }
+  }
+}

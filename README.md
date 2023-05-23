@@ -1,1 +1,3 @@
-# location-api
+# Location API
+
+Provides GraphQL APIs to manage locations

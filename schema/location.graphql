@@ -1,0 +1,114 @@
+directive @prefixedID(prefix: String!) on OBJECT
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.4"
+    import: ["@key", "@interfaceObject", "@external", "@shareable"]
+  )
+directive @interfaceObject on OBJECT
+
+extend type Query {
+  """
+  Lookup a location by id.
+  """
+  location(
+    """
+    The ID of the location.
+    """
+    id: ID!
+  ): Location!
+}
+
+extend type Mutation {
+  """
+  Create a location.
+  """
+  locationCreate(input: CreateLocationInput!): LocationCreatePayload!
+
+  """
+  Delete a location.
+  """
+  locationDelete(
+    """
+    The ID of the annotation namespace to be deleted.
+    """
+    id: ID!
+  ): LocationDeletePayload!
+
+  """
+  Update a location.
+  """
+  locationUpdate(id: ID!, input: UpdateLocationInput!): LocationUpdatePayload!
+}
+
+interface MetadataNode {
+  id: ID!
+}
+
+"""
+Return response from locationCreate
+"""
+type LocationCreatePayload {
+  """
+  The created annotation namespace.
+  """
+  location: Location!
+}
+
+"""
+Return response from locationDelete
+"""
+type LocationDeletePayload {
+  """
+  The ID of the deleted annotation namespace.
+  """
+  deletedID: ID!
+}
+
+"""
+Return response from locationUpdate
+"""
+type LocationUpdatePayload {
+  """
+  The updated annotation namespace.
+  """
+  location: Location!
+}
+
+type ResourceOwner @key(fields: "id") @interfaceObject {
+  id: ID!
+  locations(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: Cursor
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: Cursor
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Ordering options for Locations returned from the connection.
+    """
+    orderBy: LocationOrder
+
+    """
+    Filtering options for Locations returned from the connection.
+    """
+    where: LocationWhereInput
+  ): LocationConnection! @goField(forceResolver: true)
+}
+
+extend type Location {
+  owner: ResourceOwner!
+}
