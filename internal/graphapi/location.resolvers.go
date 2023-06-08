@@ -6,13 +6,11 @@ package graphapi
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/contrib/entgql"
-	"go.infratographer.com/x/gidx"
-
 	"go.infratographer.com/location-api/internal/ent/generated"
 	"go.infratographer.com/location-api/internal/ent/generated/location"
+	"go.infratographer.com/x/gidx"
 )
 
 // Owner is the resolver for the owner field.
@@ -22,6 +20,7 @@ func (r *locationResolver) Owner(ctx context.Context, obj *generated.Location) (
 
 // LocationCreate is the resolver for the locationCreate field.
 func (r *mutationResolver) LocationCreate(ctx context.Context, input generated.CreateLocationInput) (*LocationCreatePayload, error) {
+	// TODO: auth check
 	loc, err := r.client.Location.Create().SetInput(input).Save(ctx)
 	if err != nil {
 		return nil, err
@@ -32,16 +31,29 @@ func (r *mutationResolver) LocationCreate(ctx context.Context, input generated.C
 
 // LocationDelete is the resolver for the locationDelete field.
 func (r *mutationResolver) LocationDelete(ctx context.Context, id gidx.PrefixedID) (*LocationDeletePayload, error) {
-	panic(fmt.Errorf("not implemented: LocationDelete - locationDelete"))
+	// TODO: auth check
+	// TODO: check metadata for references to this location
+	if err := r.client.Location.DeleteOneID(id).Exec(ctx); err != nil {
+		return nil, err
+	}
+
+	return &LocationDeletePayload{DeletedID: id}, nil
 }
 
 // LocationUpdate is the resolver for the locationUpdate field.
 func (r *mutationResolver) LocationUpdate(ctx context.Context, id gidx.PrefixedID, input generated.UpdateLocationInput) (*LocationUpdatePayload, error) {
-	panic(fmt.Errorf("not implemented: LocationUpdate - locationUpdate"))
+	// TODO: auth check
+	loc, err := r.client.Location.UpdateOneID(id).SetInput(input).Save(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &LocationUpdatePayload{Location: loc}, nil
 }
 
 // Location is the resolver for the location field.
 func (r *queryResolver) Location(ctx context.Context, id gidx.PrefixedID) (*generated.Location, error) {
+	// TODO: auth check
 	return r.client.Location.Get(ctx, id)
 }
 
