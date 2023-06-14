@@ -3,6 +3,7 @@ package config
 
 import (
 	"go.infratographer.com/x/crdbx"
+	"go.infratographer.com/x/echojwtx"
 	"go.infratographer.com/x/echox"
 	"go.infratographer.com/x/events"
 	"go.infratographer.com/x/loggingx"
@@ -11,6 +12,7 @@ import (
 
 // AppConfig contains the application configuration structure.
 var AppConfig struct {
+	OIDC    echojwtx.AuthConfig
 	CRDB    crdbx.Config
 	Logging loggingx.Config
 	Events  EventsConfig

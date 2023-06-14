@@ -5,7 +5,6 @@ import (
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -92,28 +91,23 @@ func serve(ctx context.Context) {
 
 	client := ent.NewClient(cOpts...)
 
-	srv, err := echox.NewServer(logger.Desugar(), echox.ConfigFromViper(viper.GetViper()), versionx.BuildDetails())
-	if err != nil {
-		logger.Fatal("failed to initialize new server", zap.Error(err))
-	}
-
-	var middleware []echo.MiddlewareFunc
-
-	if config, err := echojwtx.AuthConfigFromViper(viper.GetViper()); err != nil {
-		logger.Fatal("failed to initialize jwt authentication", zap.Error(err))
-	} else if config != nil {
-		config.JWTConfig.Skipper = echox.SkipDefaultEndpoints
-
-		auth, err := echojwtx.NewAuth(ctx, *config)
+	if viper.GetBool("oidc.enabled") {
+		auth, err := echojwtx.NewAuth(ctx, config.AppConfig.OIDC)
 		if err != nil {
 			logger.Fatal("failed to initialize jwt authentication", zap.Error(err))
 		}
 
-		middleware = append(middleware, auth.Middleware())
+		auth.JWTConfig.Skipper = echox.SkipDefaultEndpoints
+		config.AppConfig.Server = config.AppConfig.Server.WithMiddleware(auth.Middleware())
+	}
+
+	srv, err := echox.NewServer(logger.Desugar(), config.AppConfig.Server, versionx.BuildDetails())
+	if err != nil {
+		logger.Fatal("failed to initialize new server", zap.Error(err))
 	}
 
 	r := graphapi.NewResolver(client, logger.Named("resolvers"))
-	handler := r.Handler(enablePlayground, middleware)
+	handler := r.Handler(enablePlayground, nil)
 
 	srv.AddHandler(handler)
 
