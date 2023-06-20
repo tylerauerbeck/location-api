@@ -1,0 +1,68 @@
+image:
+  repository: ghcr.io/infratographer/location-api
+  pullPolicy: IfNotPresent
+  tag: "v0.1.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  sessionAffinity: None
+  annotations: {}
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts: []
+  tls: {}
+
+api:
+  replicas: 1
+  listenPort: 7906
+  extraLabels: {}
+  extraAnnotations: {}
+  extraEnvVars: []
+  #- value: "postgresql://user@my-db-server:26257/load_balancer_api"
+  #  name: LOCATIONAPI_CRDB_URI
+  resources: {}
+  podSecurityContext: {}
+  securityContext: {}
+  events:
+    connectionURL: "nats://my-events-cluster.example.com:4222"
+    auth:
+      secretName: ""
+      credsPath: "/nats/creds"
+    topicPrefix: "com.infratographer"
+  db:
+    uriSecret: ""
+    certSecret: ""
+
+  oidc:
+    enabled: false
+    audience: ""
+    issuer: ""
+    jwks:
+      remoteTimeout: 1m
+
+  shutdownGracePeriod: 5s
+  trustedProxies: []
+  # - "1.2.3.4"
+  # - "1.2.3.4/32"
+  # - "1.2.3.0/24"
+
+reloader:
+  enabled: false
