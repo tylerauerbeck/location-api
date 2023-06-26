@@ -11,7 +11,7 @@ data:
   LOCATIONAPI_OIDC_AUDIENCE: "{{ .Values.api.oidc.audience }}"
   LOCATIONAPI_OIDC_ISSUER: "{{ .Values.api.oidc.issuer }}"
   LOCATIONAPI_OIDC_JWKS_REMOTE_TIMEOUT: "{{ .Values.api.oidc.jwksRemoteTimeout }}"
-  LOCATIONAPI_SERVER_LISTEN: "{{ .Values.api.listenPort }}"
+  LOCATIONAPI_SERVER_LISTEN: ":{{ .Values.api.listenPort }}"
   LOCATIONAPI_SERVER_SHUTDOWN_GRACE_PERIOD: "{{ .Values.api.shutdownGracePeriod }}"
 {{- with .Values.api.trustedProxies }}
   LOCATIONAPI_SERVER_TRUSTED_PROXIES: "{{ join " " . }}"
